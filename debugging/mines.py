@@ -9,7 +9,9 @@ class Minesweeper:
     def __init__(self, width=10, height=10, mines=10):
         self.width = width
         self.height = height
+        # Création des mines de manière aléatoire
         self.mines = set(random.sample(range(width * height), mines))
+        # Création du tableau de jeu
         self.field = [[' ' for _ in range(width)] for _ in range(height)]
         self.revealed = [[False for _ in range(width)] for _ in range(height)]
 
@@ -21,12 +23,12 @@ class Minesweeper:
             for x in range(self.width):
                 if reveal or self.revealed[y][x]:
                     if (y * self.width + x) in self.mines:
-                        print('*', end=' ')
+                        print('*', end=' ')  # Affiche la mine
                     else:
                         count = self.count_mines_nearby(x, y)
-                        print(count if count > 0 else ' ', end=' ')
+                        print(count if count > 0 else ' ', end=' ')  # Affiche le nombre de mines voisines
                 else:
-                    print('.', end=' ')
+                    print('.', end=' ')  # Affiche un point pour les cases non révélées
             print()
 
     def count_mines_nearby(self, x, y):
@@ -40,43 +42,11 @@ class Minesweeper:
         return count
 
     def reveal(self, x, y):
+        # Si la case est une mine, on retourne False (jeu perdu)
         if (y * self.width + x) in self.mines:
             return False
+        # Révéler la case
         self.revealed[y][x] = True
-        if self.count_mines_nearby(x, y) == 0:
-            for dx in [-1, 0, 1]:
-                for dy in [-1, 0, 1]:
-                    nx, ny = x + dx, y + dy
-                    if 0 <= nx < self.width and 0 <= ny < self.height and not self.revealed[ny][nx]:
-                        self.reveal(nx, ny)
-        return True
-
-    def check_victory(self):
-        for y in range(self.height):
-            for x in range(self.width):
-                # Vérifier que chaque cellule non-minée est révélée
-                if (y * self.width + x) not in self.mines and not self.revealed[y][x]:
-                    return False  # Si une cellule non-minée n'est pas révélée, pas encore gagné
-        return True  # Toutes les cellules non-minées ont été révélées
-
-    def play(self):
-        while True:
-            self.print_board()
-            try:
-                x = int(input("Enter x coordinate: "))
-                y = int(input("Enter y coordinate: "))
-                if not self.reveal(x, y):
-                    self.print_board(reveal=True)
-                    print("Game Over! You hit a mine.")
-                    break
-                if self.check_victory():  # Vérifie si le joueur a gagné
-                    self.print_board(reveal=True)
-                    print("Congratulations! You've won the game.")
-                    break
-            except ValueError:
-                print("Invalid input. Please enter numbers only.")
-
-if __name__ == "__main__":
-    game = Minesweeper()
-    game.play()
+        # Si la case ne contient pas de mine, on révèle aussi ses voisines si elles sont vides
+        if self.count_mines_nearby(x
 
