@@ -1,0 +1,1 @@
+This program calculates the factorial of a given integer using a recursive approach. The factorial calculation is performed by a function named factorial, which calls itself recursively until it reaches the base condition (factorial of 0).
